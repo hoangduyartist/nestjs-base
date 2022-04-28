@@ -15,8 +15,22 @@ export class UserService {
     private stripeService: StripeService,
   ) {}
 
+  async findByEmail(email): Promise<User> {
+    return this.userModel.findOne({
+      email: email?.toLowerCase(),
+    })
+  }
+
   async create(createUserDto): Promise<User> {
-    const createdUser = new this.userModel(createUserDto);
+    if (await this.findByEmail(createUserDto?.email)) {
+      throw new Error('Email already exists')
+    }
+    const merchantUsr = {
+      ...createUserDto,
+      email: createUserDto?.email?.toLowerCase(),
+      account_name: createUserDto?.email?.split('@')?.[0]?.toLowerCase()
+    };
+    const createdUser = new this.userModel(merchantUsr);
     return createdUser.save();
     // return this.userModel.create(createUserDto);
   }
@@ -26,6 +40,9 @@ export class UserService {
   //   return this.configService.get<string>('STRIPE_SECRET', 'STRIPE_SECRET_2');
   //   // return 'abc'
   // }
+  async findByAccName(accName: string): Promise<User> {
+    return this.userModel.findOne({ account_name: accName?.toLowerCase() })
+  }
 
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
@@ -49,12 +66,12 @@ export class UserService {
       email,
       // stripeCustomerId: { $eq: null }
     })
-    .where('stripeCustomerId').equals(null)
+    .where('stripe_customer_id').equals(null)
     if (!userByEmail) throw new Error('User by email not found or exist tripe-id')
     // return userByEmail
     const newStripeCustomer = await this.stripeService.createCustomer(name, email);
     // return newStripeCustomer;
-    return this.update(userByEmail?._id,{ stripeCustomerId: newStripeCustomer?.id })
+    return this.update(userByEmail?._id,{ stripe_customer_id: newStripeCustomer?.id })
   }
 
   async getStripeUsers() {
@@ -62,7 +79,7 @@ export class UserService {
   }
 
   async getStripeUserByEmail(email) {
-    const stripeCustomerId = await this.userModel.findOne({ email }).select(['stripeCustomerId'])
-    return this.stripeService.getCustomerById(stripeCustomerId?.stripeCustomerId)
+    const stripeCustomerId = await this.userModel.findOne({ email }).select(['stripe_customer_id'])
+    return this.stripeService.getCustomerById(stripeCustomerId?.stripe_customer_id)
   }
 }

@@ -7,9 +7,11 @@ import { ConfigModule } from '@nestjs/config';
 // module
 import { CatsModule } from './cats/cats.module';
 import { UserModule } from './user/user.module';
+import { PaymentModule } from './payment/payment.module';
+import { OrderModule } from './order/order.module';
+import { ExceptionsModule } from './exceptions/exceptions.module';
 // db
 import { MongooseModule } from '@nestjs/mongoose';
-import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -25,9 +27,11 @@ import { PaymentModule } from './payment/payment.module';
     //   }),
     //   inject: [ConfigService],
     // }),
-    CatsModule,
+    // CatsModule,
     UserModule,
     PaymentModule,
+    OrderModule
+    // ExceptionsModule
   ],
   controllers: [AppController],
   providers: [AppService],

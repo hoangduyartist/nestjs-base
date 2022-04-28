@@ -1,18 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class User {
+  @Prop()
+  _id: string
+  
   @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   email: string;
 
   @Prop()
-  stripeCustomerId: string;
+  account_name: string;
+
+  @Prop()
+  stripe_customer_id: string;
 
   @Prop()
   age: number;

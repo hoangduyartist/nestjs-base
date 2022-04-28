@@ -13,6 +13,7 @@ import { StripeService } from '../stripe/stripe.service';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     // StripeModule.forRoot('sk_test_51KqBi5BlmwayZ8P42BtxJwQkh3Z0pq3mXSvg1IpPcHqIIoCLajWUZGLA4g41PQSQmzRogECgskgVzDkEk7yzLZap00PaIepb00', { apiVersion: '2020-08-27' })
   ],
+  exports: [UserService],
   controllers: [UserController],
   providers: [UserService, StripeService],
 })

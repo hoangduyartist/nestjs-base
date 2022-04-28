@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,6 +7,11 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    // return this.appService.getHello();
+    try {
+      return this.appService.getHello();
+    } catch (error) {
+      throw new HttpException('[Internal server error]: ' + error?.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 }

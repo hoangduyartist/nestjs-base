@@ -25,6 +25,10 @@ export class StripeService {
     });
   }
 
+  getStripeInstance() {
+    return this.stripe;
+  }
+
   async createCustomer(name: string, email: string) {
     return this.stripe.customers.create({
       name,
@@ -50,4 +54,35 @@ export class StripeService {
       customer
     })
   }
+
+  async deletePaymentLink(payment) {
+
+  }
+
+  async createInvoice(props) {
+    // const { customer, description, metadata } = props;
+
+    return this.stripe.invoices.create(props)
+  }
+
+  // order - price prod - payment_link
+  async createPaymentLink(props) {
+    // const { line_items, metadata } = props;
+
+    return this.stripe.paymentLinks.create({
+      ...props
+    })
+  }
+
+  async createPriceWithProduct (props) {
+    return this.stripe.prices.create(props)
+  }
+
+  async deactivatePaymentLink (paymentLinkId) {
+    return this.stripe.paymentLinks.update(
+      paymentLinkId,
+      { active: false }
+    )
+  }
+  // order - price prod - payment_link
 }
