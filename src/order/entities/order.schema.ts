@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 
 export type OrderDocument = Order & Document;
 
 @Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class Order {
 
-  // @Prop()
-  // _id: ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true, get: v => v?.toString() })
+  _id: string;
 
   @Prop()
   status: string;
@@ -25,7 +25,7 @@ export class Order {
   @Prop()
   customer_email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User', get: v => v?.toString() })
   merchant_id: string;
 
   @Prop()

@@ -5,6 +5,8 @@ import Stripe from 'stripe';
 import { UserService } from './user.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+import { CreateUserDto } from './dto/create-user.dto';
+
 @ApiTags('users')
 @Controller('users')
 export class UserController {
@@ -26,7 +28,7 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() createUserDto, @Res() res) {
+  async create(@Body() createUserDto: CreateUserDto, @Res() res) {
     // return await this.userService.create(createCatDto);
     try {
       return res.status(HttpStatus.OK).json({

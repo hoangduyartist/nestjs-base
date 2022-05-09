@@ -38,8 +38,8 @@ export class OrderService {
     // const txn = await this.stripeService.getStripeInstance().balanceTransactions.retrieve('txn_3KtNnuBlmwayZ8P41R0NsyeA')
     // return txn
     // test
-    const dollarToCent = (dollar: number) => dollar * 100; 
-    const centToDollar = (cent: number) => cent / 100; 
+    const dollarToCent = (dollar: number) => dollar * 100;
+    const centToDollar = (cent: number) => cent / 100;
     const customerEmail = props.customer_email;
     const currencyCode = props.currency;
     // create price-product
@@ -74,7 +74,14 @@ export class OrderService {
         quantity: listProducts[i].quantity
       }
     })
-    // console.log('merchantUser', merchantUser);
+    // console.log('stripe obj', {
+    //   'merchantUser?._id': merchantUser?._id,
+    //   // "line_items": paymentLinkLineItems,
+    //   "metadata": {
+    //     techpay_merchant_id: merchantUser?._id,
+    //     customer_email: customerEmail
+    //   }
+    // });
     const newStripePaymentLink = await this.stripeService.createPaymentLink({
       "line_items": paymentLinkLineItems,
       "metadata": {
@@ -125,6 +132,7 @@ export class OrderService {
       original_payment_link: {...newStripePaymentLink},
       // merchantUser, listProducts
     }
+
   }
 
   async deactivatedOrderByPaymentLinkId(pmlId) {

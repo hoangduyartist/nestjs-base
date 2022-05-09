@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 
 export type ChargeDocument = Charge & Document;
 
@@ -33,7 +33,7 @@ export class Charge {
   @Prop()
   stripe_receipt_url: string;
 
-  @Prop()
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order' })
   order_id: string;
 
   @Prop({ required: true })

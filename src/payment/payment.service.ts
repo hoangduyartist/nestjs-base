@@ -108,7 +108,12 @@ export class PaymentService {
         const newCharge = event?.data?.object;
         const bTxn = await this.retrieveBalanceById(newCharge.balance_transaction)
         newCharge.available_on = bTxn.available_on;
-        await this.chargeCreate(newCharge);
+        try {
+          await this.chargeCreate(newCharge);
+        } catch (error) {
+          console.log('[chargeCreate err]:', error)
+        }
+        
 
       case 'checkout.session.completed':
         console.log('[checkout.session.completed]', event.type);
@@ -119,7 +124,16 @@ export class PaymentService {
         // update order in db
         const updatedOrder = await this.orderService.updateOneByKey('payment_link_id', stripePaymentLinkId, { status: 'paid', stripe_payment_intent_id })
         // await this.orderService.deactivatedOrderByPaymentLinkId(stripePaymentLinkId);
-        await this.chargeUpdateOneByKey('stripe_payment_intent_id', stripe_payment_intent_id, { order_id: updatedOrder?._id, merchant_id: updatedOrder?.merchant_id })
+        try {
+          // console.log({
+          //   'updatedOrder?._id': updatedOrder?._id,
+          //   'updatedOrder?.merchant_id': updatedOrder?.merchant_id
+          // })
+          await this.chargeUpdateOneByKey('stripe_payment_intent_id', stripe_payment_intent_id, { order_id: updatedOrder?._id, merchant_id: updatedOrder?.merchant_id })
+        } catch (error) {
+          console.log('[chargeUpdateOneByKey err]:', error)
+        }
+        
       default: 
         console.log(`Unhandled event type ${event.type}`);
     }
